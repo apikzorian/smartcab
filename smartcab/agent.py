@@ -86,14 +86,14 @@ class LearningAgent(Agent):
         # max_action = max(self.Q[state], key=lambda x: self.Q[state][x])
         # maxQ = self.Q[state][max_action]
 
-        maxQ = None
-        if state in self.Q:
-            key, value = max(self.Q[state].iteritems(), key=lambda x:x[1])
-            maxQ = key
-        else:
-            createQ(state)
+        maxQ = max(self.Q[state].values())
+        maxQ_actions = []
 
-        return maxQ
+        for action, Q in self.Q[state].items():
+            if Q == maxQ:
+                maxQ_actions.append(action)
+
+        return maxQ, maxQ_actions
 
 
     def createQ(self, state):
@@ -106,7 +106,7 @@ class LearningAgent(Agent):
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
 
-        if state not in self.Q:
+        if self.learning and state not in self.Q:
             self.Q[state] = {'left': 0, 'right': 0, 'forward': 0, None: 0}
         return
 
@@ -130,7 +130,8 @@ class LearningAgent(Agent):
         if (self.learning == False) or (self.epsilon > random.random()):
             action = random.choice(self.valid_actions)
         else:
-            action = self.get_maxQ(state)
+            maxQ, maxQ_actions = self.get_maxQ(state)
+            action = random.choice(maxQ_actions)
         return action
 
     def learn(self, state, action, reward):
@@ -143,8 +144,8 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        temp = self.Q[state][action]
         if self.learning:
+            temp = self.Q[state][action]
             self.Q[state][action] = (self.alpha * reward) + (1 - self.alpha) * temp
 
         return
