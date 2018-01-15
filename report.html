@@ -13066,7 +13066,7 @@ J1hmZmZmZmZV4gTLzMzMzMysSpxgmZmZmZmZVYkTLDMzMzMzsypxgmVmZmZmZlYl/x900A4SDENE
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>The driver is driving extremely poorly. About 40% of the driver's actions are bad, with about 20% being major violations. The reliability rate does not make sense, because the agent is driving randomly and is not making decisions based on minimizing the time to reach the destination. The agent is receiving negative rewards for its actions. The outcome of the results does not change over time, which proves that random learning is not a good option for teaching this car how to drive. Considering that this Smartcab is unreliable, unsafe, and does not learn, it should not be considered to be on the road.</p>
+<p>The driver is driving extremely poorly. About 40% of the driver's actions are bad, with about 20% being major violations, and 5%-7% causing accidents. The reliability rate is interesting considering the agent is driving randomly and is not making decisions based on minimizing the time to reach the destination. However, even with taking random actions, an agent can still make the correct decisions and even reach the destination once in a while, given this finite grid. The agent is receiving negative rewards for its actions on average. However, since its decisions are random and it may randomly make correct actions, it will still sometimes receive postivie rewards, but overall its rewards are neagtive. The outcome of the results does not change over time, which proves that random learning is not a good option for teaching this car how to drive. Considering that this Smartcab is unreliable, unsafe, and does not learn, it should not be considered to be on the road.</p>
 
 </div>
 </div>
@@ -13157,6 +13157,7 @@ J1hmZmZmZmZV4gTLzMzMzMysSpxgmZmZmZmZVYkTLDMzMzMzsypxgmVmZmZmZlYl/x900A4SDENE
 <li>Light: {Red, Green} = 2</li>
 </ol>
 <p>3 x 4 x 4 x 2 = 96</p>
+<p>Given that we are only doing 20 trials, I believe it would be difficult to learn a policy for each possible state. However, if states were combined, or if we increased the number of trials, it would be possible to learn policies for every scenario.</p>
 
 </div>
 </div>
@@ -16142,9 +16143,9 @@ fgQAAAAASUVORK5CYII=
 <ul>
 <li>Epsilon tollerance: 0.0001</li>
 <li>n_tests: 200</li>
-<li>learning rate: 0.5 (unchanged)</li>
+<li>learning rate: 0.9</li>
 </ul>
-<p>I tried many variations of changing the epsilon tollerance and kept dropping it until I started seeing significant improvements. The idea here was that the small my tollerance, the more trials would be able to run and with more trials, I started seeing more improvements in the Smartcab's safety rating. Surprisingly, I did not need to change the learning rate to see a difference in my results. I believe reducing the training space to the 4 features was the biggest difference in this project. I reduced this to only the waypoint, light, and the oncoming and left traffic. We had earlier established that the deadline feature was not necessary and that dropping the right traffic feature might also be worthwhile. Both of these proved to be true.</p>
+<p>I tried many variations of changing the epsilon tollerance and kept dropping it until I started seeing significant improvements. The idea here was that the small my tollerance, the more trials would be able to run and with more trials, I started seeing more improvements in the Smartcab's safety rating. I used a high learning rate (0.9) to allow learning to happen more quickly. I believe reducing the training space to the 4 features was the biggest difference in this project. I reduced this to only the waypoint, light, and the oncoming and left traffic. We had earlier established that the deadline feature was not necessary and that dropping the right traffic feature might also be worthwhile. Both of these proved to be true.</p>
 <p>Significant improvement was made with this Q-Learner when compared to the default Q-Learner from the previous section. The Smartcab hit 100% reliability and begins receiving positive results before even reaching 1000 trials. All of the bad actions and violations are significantly lower than the previous run. Bad actions, which in the previous run never reached below 16%, goes below 1% in our optimized run after 6000 trials. The Q-Learner results show that the driving agent successfully learned an appropriate policy and I am very satisfied with the safety and reliability ratings of the Smartcab. Reliability rating jumped from a C to an A, while Safety jumped from an F to an A+.</p>
 
 </div>
@@ -16227,12 +16228,12 @@ fgQAAAAASUVORK5CYII=
  -- left : -19.75</p>
 <p>Here, the Smartcab is told to go <strong>forward</strong> by its waypoint, the oncomming and left traffic are both going <strong>forward</strong> and the light is <strong>green</strong>. This is similar to any scenario to driving in a city where the light is green, and accurately, the value for forward is positive and None is negative, since it should by all means be going forward. It is noteworthy that the value for left is a significantly low number. This policy is policy informs the Smartcab that since there is another vehicle in the left lane that is also going forward, turning left will result in an accident and a negative reward.</p>
 <p>Below is an example of one suboptimal policy I noticed</p>
-<p>('left', 'right', 'green', 'right')
- -- forward : 1.59
- -- None : -4.17
- -- right : 0.19
- -- left : -19.86</p>
-<p>Although oncomming traffic is making a <strong>right</strong> and the Smartcab needs to make a <strong>left</strong>, it is given a negative reward and instead it is incentivized to go forward. Although this might seem unsafe, considering they are both entering the same lane, I believe if they are not going at the same speed (i.e. if the uncoming driver slows down and lets the Smartcab enter) it would still be better than asking the Smartcab to go forward and then eventually make a U-turn or make a couple of left turns to eventually get back on track. Considering the final Q-Learning agent had an A rating, it was difficult to find any suboptimal examples in the <code>sim_improved-larning.txt</code> file. However, decisions like this one may be the reason it was given an A instead of an A+.</p>
+<p>('left', 'forward', 'green', 'left')
+ -- forward : 0.03
+ -- None : -4.57
+ -- right : 1.81
+ -- left : -19.74</p>
+<p>Although oncomming traffic is going <strong>forward</strong> and the Smartcab needs to make a <strong>left</strong>, the highest Q is for it to go <strong>right</strong>. Although this is the safer choice to make in this case, it does mean that the Smartcab is going in the complete opposite direction of its waypoint and thus would be a hit on its reliabiltiy rating. Decisions like this one may be the reason it was given an A instead of an A+.</p>
 
 </div>
 </div>
